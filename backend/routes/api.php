@@ -16,6 +16,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('comments', CommentController::class);
     Route::post('/logout', function (Request $request) {
         $request->user()->currentAccessToken()->delete();
-        return response()->json(['message' => 'Logged out successfully']);
+        return response()->json(['message' => 'Logout berhasil']);
     });
 });

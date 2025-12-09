@@ -14,4 +14,8 @@ Route::apiResource('roles', RoleController::class);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('posts', PostController::class);
     Route::apiResource('comments', CommentController::class);
+    Route::post('/logout', function (Request $request) {
+        $request->user()->currentAccessToken()->delete();
+        return response()->json(['message' => 'Logged out successfully']);
+    });
 });

@@ -18,6 +18,14 @@ class PostController extends Controller
     }
 
     /**
+     * Display a public listing of posts.
+     */
+    public function publicIndex()
+    {
+        return response()->json(Post::with('user')->latest()->get());
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)

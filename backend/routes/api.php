@@ -19,6 +19,8 @@ Route::post('/login', [AuthenticatedSessionController::class, 'store'])
     ->name('login');
 
 Route::apiResource('roles', RoleController::class);
+Route::get('/posts/public', [PostController::class, 'publicIndex']);
+
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('posts', PostController::class);
     Route::apiResource('comments', CommentController::class);

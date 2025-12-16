@@ -6,7 +6,7 @@ export default function Home() {
   const handleStartWriting = () => {
     const token = localStorage.getItem('token');
     if (token) {
-      window.location.href = '/dashboard';
+      window.location.href = '/create';
     } else {
       window.location.href = '/login';
     }

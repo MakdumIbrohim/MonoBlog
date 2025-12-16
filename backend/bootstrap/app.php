@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->validateCsrfTokens(except: [
             'api/register',
             'api/login',
+            'api/posts',
         ]);
 
         $middleware->alias([

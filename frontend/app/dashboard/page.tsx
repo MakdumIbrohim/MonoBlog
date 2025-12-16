@@ -71,6 +71,28 @@ export default function Dashboard() {
     }
   };
 
+  const handleDelete = async (postId: number) => {
+    if (!confirm('Apakah Anda yakin ingin menghapus postingan ini?')) return;
+    const token = localStorage.getItem('token');
+    try {
+      const response = await fetch(`http://localhost:8000/api/posts/${postId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        setPosts(posts.filter(post => post.id !== postId));
+        alert('Postingan berhasil dihapus');
+      } else {
+        alert('Gagal menghapus postingan');
+      }
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      alert('Terjadi kesalahan saat menghapus postingan');
+    }
+  };
+
   if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
 
   return (
@@ -85,6 +107,12 @@ export default function Dashboard() {
                 className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md"
               >
                 Buat Postingan
+              </button>
+              <button
+                onClick={() => window.location.href = '/blogs'}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+              >
+                Lihat Blog
               </button>
               <button
                 onClick={handleLogout}
@@ -149,10 +177,16 @@ export default function Dashboard() {
                             {post.content.substring(0, 100)}...
                           </p>
                         </div>
-                        <div className="mt-2 flex items-center text-sm text-gray-500 dark:text-gray-400 sm:mt-0">
+                        <div className="mt-2 flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 sm:mt-0">
                           <p>
                             {new Date(post.created_at).toLocaleDateString()}
                           </p>
+                          <button
+                            onClick={() => handleDelete(post.id)}
+                            className="text-red-600 hover:text-red-800 ml-4"
+                          >
+                            Hapus
+                          </button>
                         </div>
                       </div>
                     </div>

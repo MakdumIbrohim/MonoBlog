@@ -20,8 +20,8 @@ export default function Login() {
       if (response.ok) {
         // Store token
         localStorage.setItem('token', data.token);
-        // Redirect to dashboard or home
-        window.location.href = '/';
+        // Redirect to dashboard
+        window.location.href = '/dashboard';
       } else {
         alert(data.message || 'Login gagal');
       }

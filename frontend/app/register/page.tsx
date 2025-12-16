@@ -29,7 +29,7 @@ export default function Register() {
       if (response.ok) {
         localStorage.setItem('token', data.token);
         alert('Registrasi berhasil!');
-        window.location.href = '/dashboard';
+        window.location.href = '/blogs';
       } else {
         alert(data.message || 'Registrasi gagal');
       }

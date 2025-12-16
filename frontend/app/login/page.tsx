@@ -23,8 +23,8 @@ export default function Login() {
       if (response.ok) {
         // Store token
         localStorage.setItem('token', data.token);
-        // Redirect to dashboard
-        window.location.href = '/dashboard';
+        // Redirect to blogs
+        window.location.href = '/blogs';
       } else {
         alert(data.message || 'Login gagal');
       }

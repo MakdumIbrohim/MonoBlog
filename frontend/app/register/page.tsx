@@ -7,6 +7,7 @@ export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -14,6 +15,7 @@ export default function Register() {
       alert('Password tidak cocok');
       return;
     }
+    setLoading(true);
     try {
       const response = await fetch('http://localhost:8000/api/register', {
         method: 'POST',
@@ -34,6 +36,8 @@ export default function Register() {
     } catch (error) {
       console.error('Register error:', error);
       alert('Terjadi kesalahan saat registrasi');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -98,9 +102,16 @@ export default function Register() {
           </div>
           <button
             type="submit"
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300"
+            disabled={loading}
+            className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-semibold py-2 px-4 rounded-md transition duration-300 flex items-center justify-center"
           >
-            Daftar
+            {loading ? (
+              <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            ) : null}
+            {loading ? 'Mendaftarkan...' : 'Daftar'}
           </button>
         </form>
         <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">

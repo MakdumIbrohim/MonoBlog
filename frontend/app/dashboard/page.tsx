@@ -14,6 +14,11 @@ interface Post {
   title: string;
   content: string;
   created_at: string;
+  user: {
+    id: number;
+    name: string;
+    avatar_url?: string;
+  };
 }
 
 export default function Dashboard() {
@@ -42,15 +47,11 @@ export default function Dashboard() {
         window.location.href = '/login';
       });
 
-    // Fetch user's posts
-    fetch('http://localhost:8000/api/posts', {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    })
+    // Fetch all public posts
+    fetch('http://localhost:8000/api/posts/public')
       .then(res => res.json())
       .then(data => {
-        setPosts(data.data || []);
+        setPosts(data || []);
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -72,27 +73,6 @@ export default function Dashboard() {
     }
   };
 
-  const handleDelete = async (postId: number) => {
-    if (!confirm('Apakah Anda yakin ingin menghapus postingan ini?')) return;
-    const token = localStorage.getItem('token');
-    try {
-      const response = await fetch(`http://localhost:8000/api/posts/${postId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-      if (response.ok) {
-        setPosts(posts.filter(post => post.id !== postId));
-        alert('Postingan berhasil dihapus');
-      } else {
-        alert('Gagal menghapus postingan');
-      }
-    } catch (error) {
-      console.error('Error deleting post:', error);
-      alert('Terjadi kesalahan saat menghapus postingan');
-    }
-  };
 
   if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
 
@@ -114,12 +94,6 @@ export default function Dashboard() {
                 className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md"
               >
                 Buat Postingan
-              </button>
-              <button
-                onClick={() => window.location.href = '/blogs'}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
-              >
-                Lihat Blog
               </button>
               <button
                 onClick={handleLogout}
@@ -166,10 +140,10 @@ export default function Dashboard() {
           <div className="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-md">
             <div className="px-4 py-5 sm:px-6">
               <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">
-                Postingan Anda
+                Blog Posts
               </h3>
               <p className="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">
-                Daftar postingan yang telah Anda buat.
+                Semua postingan blog dari semua pengguna.
               </p>
             </div>
             <ul className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -194,15 +168,17 @@ export default function Dashboard() {
                           </p>
                         </div>
                         <div className="mt-2 flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 sm:mt-0">
+                          <div className="flex items-center space-x-2">
+                            <img
+                              className="h-6 w-6 rounded-full object-cover"
+                              src={post.user.avatar_url || 'https://via.placeholder.com/24?text=No+Avatar'}
+                              alt={post.user.name}
+                            />
+                            <span>By {post.user.name}</span>
+                          </div>
                           <p>
                             {new Date(post.created_at).toLocaleDateString()}
                           </p>
-                          <button
-                            onClick={() => handleDelete(post.id)}
-                            className="text-red-600 hover:text-red-800 ml-4"
-                          >
-                            Hapus
-                          </button>
                         </div>
                       </div>
                     </div>

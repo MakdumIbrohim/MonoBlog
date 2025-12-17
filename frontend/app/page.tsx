@@ -11,6 +11,15 @@ export default function Home() {
       window.location.href = '/login';
     }
   };
+
+  const handleExploreBlogs = () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      window.location.href = '/dashboard';
+    } else {
+      window.location.href = '/login';
+    }
+  };
   return (
     <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
       {/* Hero Section */}
@@ -27,7 +36,7 @@ export default function Home() {
             <button onClick={handleStartWriting} className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-300">
               Mulai Menulis
             </button>
-            <button onClick={() => window.location.href = '/blogs'} className="bg-white hover:bg-gray-50 text-indigo-600 font-semibold py-3 px-8 rounded-lg border border-indigo-600 transition duration-300">
+            <button onClick={handleExploreBlogs} className="bg-white hover:bg-gray-50 text-indigo-600 font-semibold py-3 px-8 rounded-lg border border-indigo-600 transition duration-300">
               Jelajahi Blog
             </button>
           </div>

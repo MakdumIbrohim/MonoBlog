@@ -9,6 +9,19 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
+    public function updateProfile(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $request->user()->id,
+        ]);
+
+        $user = $request->user();
+        $user->update($request->only('name', 'email'));
+
+        return response()->json(['message' => 'Profile updated successfully', 'user' => $user]);
+    }
+
     public function updateAvatar(Request $request)
     {
         $request->validate([

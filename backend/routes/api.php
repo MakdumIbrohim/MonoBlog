@@ -25,6 +25,7 @@ Route::get('/posts/public', [PostController::class, 'publicIndex']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('posts', PostController::class);
     Route::apiResource('comments', CommentController::class);
+    Route::put('/user/profile', [UserController::class, 'updateProfile']);
     Route::post('/user/avatar', [UserController::class, 'updateAvatar']);
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');

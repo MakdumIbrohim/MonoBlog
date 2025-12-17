@@ -14,8 +14,11 @@ export default function Profile() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
+  const [updatingProfile, setUpdatingProfile] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [editMode, setEditMode] = useState(false);
+  const [formData, setFormData] = useState({ name: '', email: '' });
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -32,6 +35,7 @@ export default function Profile() {
       .then(res => res.json())
       .then(data => {
         setUser(data);
+        setFormData({ name: data.name, email: data.email });
         setLoading(false);
       })
       .catch(() => {
@@ -50,13 +54,43 @@ export default function Profile() {
     }
   };
 
+  const handleProfileUpdate = async () => {
+    setUpdatingProfile(true);
+    const token = localStorage.getItem('token');
+
+    try {
+      const response = await fetch('http://localhost:8000/api/user/profile', {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setUser(data.user);
+        setEditMode(false);
+        alert('Profile berhasil diperbarui');
+      } else {
+        alert('Gagal memperbarui profile');
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      alert('Terjadi kesalahan saat memperbarui profile');
+    } finally {
+      setUpdatingProfile(false);
+    }
+  };
+
   const handleAvatarUpdate = async () => {
     if (!selectedFile) return;
 
     setUpdating(true);
     const token = localStorage.getItem('token');
-    const formData = new FormData();
-    formData.append('avatar', selectedFile);
+    const formDataUpload = new FormData();
+    formDataUpload.append('avatar', selectedFile);
 
     try {
       const response = await fetch('http://localhost:8000/api/user/avatar', {
@@ -64,7 +98,7 @@ export default function Profile() {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
-        body: formData,
+        body: formDataUpload,
       });
 
       if (response.ok) {
@@ -118,9 +152,70 @@ export default function Profile() {
                     alt="Avatar"
                   />
                 </div>
-                <div>
-                  <h4 className="text-lg font-medium text-gray-900 dark:text-white">{user?.name}</h4>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">{user?.email}</p>
+                <div className="flex-1">
+                  {editMode ? (
+                    <div className="space-y-4">
+                      <div>
+                        <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                          Nama
+                        </label>
+                        <input
+                          type="text"
+                          id="name"
+                          value={formData.name}
+                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                          className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                          Email
+                        </label>
+                        <input
+                          type="email"
+                          id="email"
+                          value={formData.email}
+                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                          className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
+                        />
+                      </div>
+                      <div className="flex space-x-4">
+                        <button
+                          onClick={handleProfileUpdate}
+                          disabled={updatingProfile}
+                          className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-4 py-2 rounded-md flex items-center"
+                        >
+                          {updatingProfile ? (
+                            <svg className="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                          ) : null}
+                          {updatingProfile ? 'Memperbarui...' : 'Perbarui Profile'}
+                        </button>
+                        <button
+                          onClick={() => {
+                            setEditMode(false);
+                            setFormData({ name: user?.name || '', email: user?.email || '' });
+                          }}
+                          className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md"
+                        >
+                          Batal
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <h4 className="text-lg font-medium text-gray-900 dark:text-white">{user?.name}</h4>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{user?.email}</p>
+                      <button
+                        onClick={() => setEditMode(true)}
+                        className="mt-2 text-indigo-600 hover:text-indigo-500 text-sm font-medium"
+                      >
+                        Edit Profile
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
 

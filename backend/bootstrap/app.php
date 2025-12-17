@@ -21,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'api/login',
             'api/logout',
             'api/posts*',
+            'api/user/profile',
             'api/user/avatar',
         ]);
 

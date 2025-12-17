@@ -145,11 +145,25 @@ export default function Profile() {
               </h3>
 
               <div className="flex items-center space-x-6 mb-6">
-                <div className="flex-shrink-0">
+                <div className="flex-shrink-0 relative">
                   <img
-                    className="h-24 w-24 rounded-full object-cover border-4 border-gray-200 dark:border-gray-700"
+                    className="h-24 w-24 rounded-full object-cover border-4 border-gray-200 dark:border-gray-700 cursor-pointer hover:opacity-80 transition-opacity"
                     src={preview || user?.avatar_url || 'https://via.placeholder.com/96?text=No+Avatar'}
                     alt="Avatar"
+                    onClick={() => document.getElementById('avatar-input')?.click()}
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full opacity-0 hover:opacity-100 transition-opacity cursor-pointer" onClick={() => document.getElementById('avatar-input')?.click()}>
+                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                  <input
+                    type="file"
+                    id="avatar-input"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="hidden"
                   />
                 </div>
                 <div className="flex-1">
@@ -219,56 +233,37 @@ export default function Profile() {
                 </div>
               </div>
 
-              <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
-                <h4 className="text-md font-medium text-gray-900 dark:text-white mb-4">
-                  Ubah Avatar
-                </h4>
-                <div className="space-y-4">
-                  <div>
-                    <label htmlFor="avatar" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Pilih gambar baru
-                    </label>
-                    <input
-                      type="file"
-                      id="avatar"
-                      accept="image/*"
-                      onChange={handleFileChange}
-                      className="mt-1 block w-full text-sm text-gray-500 dark:text-gray-400
-                        file:mr-4 file:py-2 file:px-4
-                        file:rounded-full file:border-0
-                        file:text-sm file:font-semibold
-                        file:bg-blue-50 file:text-blue-700
-                        hover:file:bg-blue-100"
-                    />
+              {selectedFile && (
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
+                  <h4 className="text-md font-medium text-gray-900 dark:text-white mb-4">
+                    Pratinjau Avatar Baru
+                  </h4>
+                  <div className="flex space-x-4">
+                    <button
+                      onClick={handleAvatarUpdate}
+                      disabled={updating}
+                      className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-4 py-2 rounded-md flex items-center"
+                    >
+                      {updating ? (
+                        <svg className="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                      ) : null}
+                      {updating ? 'Memperbarui...' : 'Perbarui Avatar'}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setSelectedFile(null);
+                        setPreview(null);
+                      }}
+                      className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md"
+                    >
+                      Batal
+                    </button>
                   </div>
-                  {selectedFile && (
-                    <div className="flex space-x-4">
-                      <button
-                        onClick={handleAvatarUpdate}
-                        disabled={updating}
-                        className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-4 py-2 rounded-md flex items-center"
-                      >
-                        {updating ? (
-                          <svg className="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                          </svg>
-                        ) : null}
-                        {updating ? 'Memperbarui...' : 'Perbarui Avatar'}
-                      </button>
-                      <button
-                        onClick={() => {
-                          setSelectedFile(null);
-                          setPreview(null);
-                        }}
-                        className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md"
-                      >
-                        Batal
-                      </button>
-                    </div>
-                  )}
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>

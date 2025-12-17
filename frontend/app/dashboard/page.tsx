@@ -6,6 +6,7 @@ interface User {
   id: number;
   name: string;
   email: string;
+  avatar_url?: string;
 }
 
 interface Post {
@@ -103,6 +104,12 @@ export default function Dashboard() {
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
             <div className="flex space-x-4">
               <button
+                onClick={() => window.location.href = '/profile'}
+                className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md"
+              >
+                Profile
+              </button>
+              <button
                 onClick={() => window.location.href = '/create'}
                 className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md"
               >
@@ -137,12 +144,21 @@ export default function Dashboard() {
           {user && (
             <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg mb-6">
               <div className="px-4 py-5 sm:p-6">
-                <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">
-                  Selamat datang, {user.name}!
-                </h3>
-                <p className="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">
-                  Email: {user.email}
-                </p>
+                <div className="flex items-center space-x-4">
+                  <img
+                    className="h-16 w-16 rounded-full object-cover border-2 border-gray-200 dark:border-gray-700"
+                    src={user.avatar_url || 'https://via.placeholder.com/64?text=No+Avatar'}
+                    alt="Avatar"
+                  />
+                  <div>
+                    <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">
+                      Selamat datang, {user.name}!
+                    </h3>
+                    <p className="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">
+                      Email: {user.email}
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           )}

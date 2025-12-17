@@ -23,7 +23,15 @@ class User extends Authenticatable
         'email',
         'password',
         'role_id',
+        'avatar',
     ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var list<string>
+     */
+    protected $appends = ['avatar_url'];
 
     /**
      * The attributes that are mass assignable.
@@ -77,5 +85,13 @@ class User extends Authenticatable
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * Get the avatar URL.
+     */
+    public function getAvatarUrlAttribute()
+    {
+        return $this->avatar ? asset('storage/' . $this->avatar) : null;
     }
 }

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\RoleController;
+use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Http\Request;
@@ -24,6 +25,7 @@ Route::get('/posts/public', [PostController::class, 'publicIndex']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('posts', PostController::class);
     Route::apiResource('comments', CommentController::class);
+    Route::post('/user/avatar', [UserController::class, 'updateAvatar']);
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 });

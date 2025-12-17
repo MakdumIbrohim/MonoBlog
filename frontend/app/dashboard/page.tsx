@@ -176,9 +176,17 @@ export default function Dashboard() {
                             />
                             <span>By {post.user.name}</span>
                           </div>
-                          <p>
-                            {new Date(post.created_at).toLocaleDateString()}
-                          </p>
+                          <div className="flex items-center space-x-2">
+                            <p>
+                              {new Date(post.created_at).toLocaleDateString()}
+                            </p>
+                            <button
+                              onClick={() => window.location.href = `/create?id=${post.id}`}
+                              className="text-blue-600 hover:text-blue-800"
+                            >
+                              Edit
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>

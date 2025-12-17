@@ -1,26 +1,54 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 export default function CreatePost() {
+  const searchParams = useSearchParams();
+  const postId = searchParams.get('id');
+  const isEditing = !!postId;
+
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(false);
+  const [fetchLoading, setFetchLoading] = useState(isEditing);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
       window.location.href = '/login';
+      return;
     }
-  }, []);
+
+    if (isEditing && postId) {
+      fetch(`http://localhost:8000/api/posts/${postId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+        .then(res => res.json())
+        .then(data => {
+          setTitle(data.title);
+          setContent(data.content);
+          setFetchLoading(false);
+        })
+        .catch(() => {
+          alert('Failed to load post');
+          window.location.href = '/dashboard';
+        });
+    }
+  }, [isEditing, postId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch('http://localhost:8000/api/posts', {
-        method: 'POST',
+      const url = isEditing ? `http://localhost:8000/api/posts/${postId}` : 'http://localhost:8000/api/posts';
+      const method = isEditing ? 'PUT' : 'POST';
+
+      const response = await fetch(url, {
+        method,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
@@ -28,24 +56,28 @@ export default function CreatePost() {
         body: JSON.stringify({ title, content }),
       });
       if (response.ok) {
-        alert('Post created successfully!');
+        alert(`Post ${isEditing ? 'updated' : 'created'} successfully!`);
         window.location.href = '/dashboard';
       } else {
         const data = await response.json();
-        alert(data.message || 'Failed to create post');
+        alert(data.message || `Failed to ${isEditing ? 'update' : 'create'} post`);
       }
     } catch (error) {
-      console.error('Error creating post:', error);
-      alert('An error occurred while creating the post');
+      console.error(`Error ${isEditing ? 'updating' : 'creating'} post:`, error);
+      alert(`An error occurred while ${isEditing ? 'updating' : 'creating'} the post`);
     } finally {
       setLoading(false);
     }
   };
 
+  if (fetchLoading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="max-w-2xl mx-auto px-4">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Buat Postingan Baru</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
+          {isEditing ? 'Edit Postingan' : 'Buat Postingan Baru'}
+        </h1>
         <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
           <div className="mb-4">
             <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -86,7 +118,7 @@ export default function CreatePost() {
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
             ) : null}
-            {loading ? 'Membuat Postingan...' : 'Buat Postingan'}
+            {loading ? (isEditing ? 'Memperbarui Postingan...' : 'Membuat Postingan...') : (isEditing ? 'Perbarui Postingan' : 'Buat Postingan')}
           </button>
         </form>
       </div>

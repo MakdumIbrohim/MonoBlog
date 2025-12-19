@@ -1,36 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { loginUser } from '../../services/auth';
+import { useLogin } from '../../hooks/useLogin';
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      window.location.href = '/dashboard';
-    }
-  }, []);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const data = await loginUser(email, password);
-      // Store token
-      localStorage.setItem('token', data.token);
-      // Redirect to dashboard
-      window.location.href = '/dashboard';
-    } catch (error) {
-      console.error('Login error:', error);
-      alert(error instanceof Error ? error.message : 'Terjadi kesalahan saat login');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { email, setEmail, password, setPassword, loading, handleSubmit } = useLogin();
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">

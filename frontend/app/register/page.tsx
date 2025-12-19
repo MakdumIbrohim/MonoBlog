@@ -1,48 +1,23 @@
 'use client';
 
-import { useState } from 'react';
+import { useRegister } from '../../hooks/useRegister';
 
 export default function Register() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password !== confirmPassword) {
-      alert('Password tidak cocok');
-      return;
-    }
-    setLoading(true);
-    try {
-      const response = await fetch('http://localhost:8000/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({ name, email, password, password_confirmation: confirmPassword }),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        localStorage.setItem('token', data.token);
-        alert('Registrasi berhasil!');
-        window.location.href = '/blogs';
-      } else {
-        alert(data.message || 'Registrasi gagal');
-      }
-    } catch (error) {
-      console.error('Register error:', error);
-      alert('Terjadi kesalahan saat registrasi');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    name,
+    setName,
+    email,
+    setEmail,
+    password,
+    setPassword,
+    confirmPassword,
+    setConfirmPassword,
+    loading,
+    handleSubmit,
+  } = useRegister();
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
       <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
         <h1 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-6">
           Daftar ke Mono<span className="text-indigo-600">Blog</span>

@@ -23,8 +23,8 @@ export default function Login() {
       if (response.ok) {
         // Store token
         localStorage.setItem('token', data.token);
-        // Redirect to blogs
-        window.location.href = '/blogs';
+        // Redirect to dashboard
+        window.location.href = '/dashboard';
       } else {
         alert(data.message || 'Login gagal');
       }
@@ -68,6 +68,11 @@ export default function Login() {
               required
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             />
+          </div>
+          <div className="text-right">
+            <a href="/forgot-password" className="text-sm text-indigo-600 hover:text-indigo-500">
+              Lupa password?
+            </a>
           </div>
           <button
             type="submit"

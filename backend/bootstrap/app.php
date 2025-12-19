@@ -20,6 +20,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'api/register',
             'api/login',
             'api/logout',
+            'api/forgot-password',
+            'api/reset-password',
             'api/posts*',
             'api/user/profile',
             'api/user/avatar',

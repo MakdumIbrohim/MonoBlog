@@ -47,8 +47,12 @@ export default function Dashboard() {
         window.location.href = '/login';
       });
 
-    // Fetch all public posts
-    fetch('http://localhost:8000/api/posts/public')
+    // Fetch user's own posts
+    fetch('http://localhost:8000/api/posts', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    })
       .then(res => res.json())
       .then(data => {
         setPosts(data || []);

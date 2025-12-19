@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { loginUser } from '../../services/auth';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -18,26 +19,14 @@ export default function Login() {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:8000/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        // Store token
-        localStorage.setItem('token', data.token);
-        // Redirect to dashboard
-        window.location.href = '/dashboard';
-      } else {
-        alert(data.message || 'Login gagal');
-      }
+      const data = await loginUser(email, password);
+      // Store token
+      localStorage.setItem('token', data.token);
+      // Redirect to dashboard
+      window.location.href = '/dashboard';
     } catch (error) {
       console.error('Login error:', error);
-      alert('Terjadi kesalahan saat login');
+      alert(error instanceof Error ? error.message : 'Terjadi kesalahan saat login');
     } finally {
       setLoading(false);
     }

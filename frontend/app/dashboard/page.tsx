@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 interface User {
   id: number;
@@ -104,6 +105,7 @@ export default function Dashboard() {
         alert('Gagal menghapus postingan');
       }
     } catch (error) {
+      console.error('Error deleting post:', error);
       alert('Terjadi kesalahan saat menghapus postingan');
     }
   };
@@ -154,7 +156,9 @@ export default function Dashboard() {
             <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg mb-6">
               <div className="px-4 py-5 sm:p-6">
                 <div className="flex items-center space-x-4">
-                  <img
+                  <Image
+                    width={64}
+                    height={64}
                     className="h-16 w-16 rounded-full object-cover border-2 border-gray-200 dark:border-gray-700"
                     src={user.avatar_url || 'https://via.placeholder.com/64?text=No+Avatar'}
                     alt="Avatar"
@@ -190,7 +194,7 @@ export default function Dashboard() {
                         <p className="text-sm font-medium text-indigo-600 truncate">
                           {post.title}
                         </p>
-                        <div className="ml-2 flex-shrink-0 flex">
+                        <div className="ml-2 shrink-0 flex">
                           <p className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                             Published
                           </p>
@@ -204,7 +208,9 @@ export default function Dashboard() {
                         </div>
                         <div className="mt-2 flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 sm:mt-0">
                           <div className="flex items-center space-x-2">
-                            <img
+                            <Image
+                              width={24}
+                              height={24}
                               className="h-6 w-6 rounded-full object-cover"
                               src={post.user.avatar_url || 'https://via.placeholder.com/24?text=No+Avatar'}
                               alt={post.user.name}

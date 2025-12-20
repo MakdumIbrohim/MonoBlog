@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { getUser, getPosts, logoutUser, deletePost } from '../../services/api';
 
 interface User {
   id: number;
@@ -36,12 +37,7 @@ export default function Dashboard() {
     }
 
     // Fetch user data
-    fetch('http://localhost:8000/api/user', {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    })
-      .then(res => res.json())
+    getUser()
       .then(data => setUser(data))
       .catch(() => {
         localStorage.removeItem('token');
@@ -49,14 +45,9 @@ export default function Dashboard() {
       });
 
     // Fetch user's own posts
-    fetch('http://localhost:8000/api/posts', {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    })
-      .then(res => res.json())
+    getPosts()
       .then(data => {
-        setPosts(data || []);
+        setPosts(data);
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -64,14 +55,8 @@ export default function Dashboard() {
 
   const handleLogout = async () => {
     setLogoutLoading(true);
-    const token = localStorage.getItem('token');
     try {
-      await fetch('http://localhost:8000/api/logout', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
+      await logoutUser();
     } finally {
       localStorage.removeItem('token');
       window.location.href = '/';
@@ -83,27 +68,11 @@ export default function Dashboard() {
       return;
     }
 
-    const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`http://localhost:8000/api/posts/${postId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        // Refresh posts
-        const postsResponse = await fetch('http://localhost:8000/api/posts', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-        const data = await postsResponse.json();
-        setPosts(data || []);
-      } else {
-        alert('Gagal menghapus postingan');
-      }
+      await deletePost(postId);
+      // Refresh posts
+      const data = await getPosts();
+      setPosts(data);
     } catch (error) {
       console.error('Error deleting post:', error);
       alert('Terjadi kesalahan saat menghapus postingan');

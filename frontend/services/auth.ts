@@ -1,5 +1,7 @@
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api';
+
 export const loginUser = async (email: string, password: string) => {
-  const response = await fetch('http://localhost:8000/api/login', {
+  const response = await fetch(`${API_BASE_URL}/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -15,7 +17,7 @@ export const loginUser = async (email: string, password: string) => {
 };
 
 export const registerUser = async (name: string, email: string, password: string, password_confirmation: string) => {
-  const response = await fetch('http://localhost:8000/api/register', {
+  const response = await fetch(`${API_BASE_URL}/register`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

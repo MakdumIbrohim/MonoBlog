@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { getPost, createPost, updatePost } from '../../services/api';
 
 export default function CreatePost() {
   const searchParams = useSearchParams();
@@ -21,12 +22,7 @@ export default function CreatePost() {
     }
 
     if (isEditing && postId) {
-      fetch(`http://localhost:8000/api/posts/${postId}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      })
-        .then(res => res.json())
+      getPost(Number(postId))
         .then(data => {
           setTitle(data.title);
           setContent(data.content);
@@ -42,29 +38,18 @@ export default function CreatePost() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const token = localStorage.getItem('token');
     try {
-      const url = isEditing ? `http://localhost:8000/api/posts/${postId}` : 'http://localhost:8000/api/posts';
-      const method = isEditing ? 'PUT' : 'POST';
-
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({ title, content }),
-      });
-      if (response.ok) {
-        alert(`Post ${isEditing ? 'updated' : 'created'} successfully!`);
-        window.location.href = '/dashboard';
+      if (isEditing && postId) {
+        await updatePost(Number(postId), title, content);
+        alert('Post updated successfully!');
       } else {
-        const data = await response.json();
-        alert(data.message || `Failed to ${isEditing ? 'update' : 'create'} post`);
+        await createPost(title, content);
+        alert('Post created successfully!');
       }
+      window.location.href = '/dashboard';
     } catch (error) {
       console.error(`Error ${isEditing ? 'updating' : 'creating'} post:`, error);
-      alert(`An error occurred while ${isEditing ? 'updating' : 'creating'} the post`);
+      alert(error instanceof Error ? error.message : `An error occurred while ${isEditing ? 'updating' : 'creating'} the post`);
     } finally {
       setLoading(false);
     }

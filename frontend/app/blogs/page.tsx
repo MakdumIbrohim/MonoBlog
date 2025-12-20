@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { getUser, getPublicPosts } from '../../services/api';
 
 interface User {
   id: number;
@@ -31,18 +32,12 @@ export default function Blogs() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      fetch('http://localhost:8000/api/user', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      })
-        .then(res => res.json())
+      getUser()
         .then(data => setUser(data))
         .catch(() => localStorage.removeItem('token'));
     }
 
-    fetch('http://localhost:8000/api/posts/public')
-      .then(res => res.json())
+    getPublicPosts()
       .then(data => {
         setPosts(data);
         setLoading(false);

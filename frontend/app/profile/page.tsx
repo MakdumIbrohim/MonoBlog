@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { getUser, updateProfile, updateAvatar } from '../../services/api';
 
 interface User {
   id: number;
@@ -27,12 +28,7 @@ export default function Profile() {
       return;
     }
 
-    fetch('http://localhost:8000/api/user', {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    })
-      .then(res => res.json())
+    getUser()
       .then(data => {
         setUser(data);
         setFormData({ name: data.name, email: data.email });
@@ -56,29 +52,15 @@ export default function Profile() {
 
   const handleProfileUpdate = async () => {
     setUpdatingProfile(true);
-    const token = localStorage.getItem('token');
 
     try {
-      const response = await fetch('http://localhost:8000/api/user/profile', {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setUser(data.user);
-        setEditMode(false);
-        alert('Profile berhasil diperbarui');
-      } else {
-        alert('Gagal memperbarui profile');
-      }
+      const data = await updateProfile(formData.name, formData.email);
+      setUser(data.user);
+      setEditMode(false);
+      alert('Profile berhasil diperbarui');
     } catch (error) {
       console.error('Error updating profile:', error);
-      alert('Terjadi kesalahan saat memperbarui profile');
+      alert(error instanceof Error ? error.message : 'Terjadi kesalahan saat memperbarui profile');
     } finally {
       setUpdatingProfile(false);
     }
@@ -88,31 +70,16 @@ export default function Profile() {
     if (!selectedFile) return;
 
     setUpdating(true);
-    const token = localStorage.getItem('token');
-    const formDataUpload = new FormData();
-    formDataUpload.append('avatar', selectedFile);
 
     try {
-      const response = await fetch('http://localhost:8000/api/user/avatar', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-        body: formDataUpload,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setUser(prev => prev ? { ...prev, avatar: data.avatar, avatar_url: data.avatar_url } : null);
-        setSelectedFile(null);
-        setPreview(null);
-        alert('Avatar berhasil diperbarui');
-      } else {
-        alert('Gagal memperbarui avatar');
-      }
+      const data = await updateAvatar(selectedFile);
+      setUser(prev => prev ? { ...prev, avatar: data.avatar, avatar_url: data.avatar_url } : null);
+      setSelectedFile(null);
+      setPreview(null);
+      alert('Avatar berhasil diperbarui');
     } catch (error) {
       console.error('Error updating avatar:', error);
-      alert('Terjadi kesalahan saat memperbarui avatar');
+      alert(error instanceof Error ? error.message : 'Terjadi kesalahan saat memperbarui avatar');
     } finally {
       setUpdating(false);
     }

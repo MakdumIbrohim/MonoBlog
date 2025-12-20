@@ -1,6 +1,8 @@
 'use client';
 
+
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { getUser, updateProfile, updateAvatar } from '../../services/api';
 
 interface User {
@@ -112,11 +114,13 @@ export default function Profile() {
               </h3>
 
               <div className="flex items-center space-x-6 mb-6">
-                <div className="flex-shrink-0 relative">
-                  <img
-                    className="h-24 w-24 rounded-full object-cover border-4 border-gray-200 dark:border-gray-700 cursor-pointer hover:opacity-80 transition-opacity"
+                <div className="shrink-0 relative">
+                  <Image
+                    className="rounded-full object-cover border-4 border-gray-200 dark:border-gray-700 cursor-pointer hover:opacity-80 transition-opacity"
                     src={preview || user?.avatar_url || 'https://via.placeholder.com/96?text=No+Avatar'}
                     alt="Avatar"
+                    width={96}
+                    height={96}
                     onClick={() => document.getElementById('avatar-input')?.click()}
                   />
                   <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full opacity-0 hover:opacity-100 transition-opacity cursor-pointer" onClick={() => document.getElementById('avatar-input')?.click()}>

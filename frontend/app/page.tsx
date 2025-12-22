@@ -1,6 +1,7 @@
 'use client';
 
 import Footer from './components/Footer';
+import ThemeToggle from './components/ThemeToggle';
 
 export default function Home() {
   const handleStartWriting = () => {
@@ -24,6 +25,9 @@ export default function Home() {
     <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
       {/* Hero Section */}
       <section className="relative py-20 px-4">
+        <div className="absolute top-4 right-4">
+          <ThemeToggle />
+        </div>
         <div className="container mx-auto text-center">
           <h1 className="text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-6">
             Mono<span className="text-indigo-600">Blog</span>

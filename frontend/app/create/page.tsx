@@ -3,11 +3,13 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { getPost, createPost, updatePost } from '../../services/api';
+import { useToast } from '../components/ToastContext';
 
 export default function CreatePost() {
   const searchParams = useSearchParams();
   const postId = searchParams.get('id');
   const isEditing = !!postId;
+  const { showToast } = useToast();
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -29,7 +31,7 @@ export default function CreatePost() {
           setFetchLoading(false);
         })
         .catch(() => {
-          alert('Failed to load post');
+          showToast('Failed to load post', 'error');
           window.location.href = '/dashboard';
         });
     }
@@ -41,15 +43,15 @@ export default function CreatePost() {
     try {
       if (isEditing && postId) {
         await updatePost(Number(postId), title, content);
-        alert('Post updated successfully!');
+        showToast('Post updated successfully!', 'success');
       } else {
         await createPost(title, content);
-        alert('Post created successfully!');
+        showToast('Post created successfully!', 'success');
       }
       window.location.href = '/dashboard';
     } catch (error) {
       console.error(`Error ${isEditing ? 'updating' : 'creating'} post:`, error);
-      alert(error instanceof Error ? error.message : `An error occurred while ${isEditing ? 'updating' : 'creating'} the post`);
+      showToast(error instanceof Error ? error.message : `An error occurred while ${isEditing ? 'updating' : 'creating'} the post`, 'error');
     } finally {
       setLoading(false);
     }

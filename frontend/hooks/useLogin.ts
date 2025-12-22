@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { loginUser } from '../services/auth';
+import { useToast } from '../app/components/ToastContext';
 
 export const useLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const { showToast } = useToast();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -22,7 +24,7 @@ export const useLogin = () => {
       window.location.href = '/dashboard';
     } catch (error) {
       console.error('Login error:', error);
-      alert(error instanceof Error ? error.message : 'Terjadi kesalahan saat login');
+      showToast(error instanceof Error ? error.message : 'Terjadi kesalahan saat login', 'error');
     } finally {
       setLoading(false);
     }

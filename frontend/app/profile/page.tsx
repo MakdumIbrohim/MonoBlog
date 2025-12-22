@@ -4,6 +4,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { getUser, updateProfile, updateAvatar } from '../../services/api';
+import { useToast } from '../components/ToastContext';
 
 interface User {
   id: number;
@@ -14,6 +15,7 @@ interface User {
 }
 
 export default function Profile() {
+  const { showToast } = useToast();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
@@ -59,10 +61,10 @@ export default function Profile() {
       const data = await updateProfile(formData.name, formData.email);
       setUser(data.user);
       setEditMode(false);
-      alert('Profile berhasil diperbarui');
+      showToast('Profile berhasil diperbarui', 'success');
     } catch (error) {
       console.error('Error updating profile:', error);
-      alert(error instanceof Error ? error.message : 'Terjadi kesalahan saat memperbarui profile');
+      showToast(error instanceof Error ? error.message : 'Terjadi kesalahan saat memperbarui profile', 'error');
     } finally {
       setUpdatingProfile(false);
     }
@@ -78,10 +80,10 @@ export default function Profile() {
       setUser(prev => prev ? { ...prev, avatar: data.avatar, avatar_url: data.avatar_url } : null);
       setSelectedFile(null);
       setPreview(null);
-      alert('Avatar berhasil diperbarui');
+      showToast('Avatar berhasil diperbarui', 'success');
     } catch (error) {
       console.error('Error updating avatar:', error);
-      alert(error instanceof Error ? error.message : 'Terjadi kesalahan saat memperbarui avatar');
+      showToast(error instanceof Error ? error.message : 'Terjadi kesalahan saat memperbarui avatar', 'error');
     } finally {
       setUpdating(false);
     }

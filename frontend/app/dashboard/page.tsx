@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { getUser, getPosts, logoutUser, deletePost } from '../../services/api';
 import ThemeToggle from '../components/ThemeToggle';
+import { useToast } from '../components/ToastContext';
 
 interface User {
   id: number;
@@ -25,6 +26,7 @@ interface Post {
 }
 
 export default function Dashboard() {
+  const { showToast } = useToast();
   const [user, setUser] = useState<User | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
@@ -76,7 +78,7 @@ export default function Dashboard() {
       setPosts(data);
     } catch (error) {
       console.error('Error deleting post:', error);
-      alert('Terjadi kesalahan saat menghapus postingan');
+      showToast('Terjadi kesalahan saat menghapus postingan', 'error');
     }
   };
 

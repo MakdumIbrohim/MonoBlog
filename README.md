@@ -1,155 +1,155 @@
 # MonoBlog
 
-A full-stack blog application built with Laravel (backend) and Next.js (frontend). This monorepo provides a complete blogging platform with user authentication, post management, comments, and role-based access control.
+Aplikasi blog full-stack yang dibangun dengan Laravel (backend) dan Next.js (frontend). Monorepo ini menyediakan platform blogging lengkap dengan autentikasi pengguna, manajemen postingan, komentar, dan kontrol akses berbasis peran.
 
-## Features
+## Fitur
 
-- **User Authentication**: Registration, login, email verification, password reset
-- **Post Management**: Create, read, update, delete blog posts
-- **Comments System**: Add comments to posts
-- **Role-Based Access**: Different user roles with permissions
-- **Responsive Design**: Modern UI with theme toggle
-- **API-Driven**: RESTful API backend with Next.js frontend
+- **Autentikasi Pengguna**: Registrasi, login, verifikasi email, reset kata sandi
+- **Manajemen Postingan**: Buat, baca, perbarui, hapus postingan blog
+- **Sistem Komentar**: Tambahkan komentar pada postingan
+- **Akses Berbasis Peran**: Peran pengguna yang berbeda dengan izin
+- **Desain Responsif**: UI modern dengan toggle tema
+- **Didorong API**: Backend API RESTful dengan frontend Next.js
 
 ## Tech Stack
 
 ### Backend
-- **Laravel**: PHP framework for robust backend development
-- **MySQL**: Database for data persistence
-- **Sanctum**: API authentication
-- **Eloquent ORM**: Database interactions
+- **Laravel**: Framework PHP untuk pengembangan backend yang kuat
+- **MySQL**: Database untuk persistensi data
+- **Sanctum**: Autentikasi API
+- **Eloquent ORM**: Interaksi database
 
 ### Frontend
-- **Next.js**: React framework for the frontend
-- **TypeScript**: Type-safe JavaScript
-- **Tailwind CSS**: Utility-first CSS framework
-- **React Hooks**: State management
+- **Next.js**: Framework React untuk frontend
+- **TypeScript**: JavaScript yang aman tipe
+- **Tailwind CSS**: Framework CSS utility-first
+- **React Hooks**: Manajemen state
 
-## Installation
+## Instalasi
 
-### Prerequisites
-- PHP 8.1 or higher
+### Prasyarat
+- PHP 8.1 atau lebih tinggi
 - Composer
-- Node.js 18 or higher
-- npm, yarn, or pnpm
-- MySQL database
+- Node.js 18 atau lebih tinggi
+- npm, yarn, atau pnpm
+- Database MySQL
 
-### Backend Setup
+### Setup Backend
 
-1. Navigate to the backend directory:
+1. Navigasi ke direktori backend:
    ```bash
    cd backend
    ```
 
-2. Install PHP dependencies:
+2. Instal dependensi PHP:
    ```bash
    composer install
    ```
 
-3. Copy the environment file and configure it:
+3. Salin file environment dan konfigurasikan:
    ```bash
    cp .env.example .env
    ```
-   Update the `.env` file with your database credentials and other settings.
+   Perbarui file `.env` dengan kredensial database dan pengaturan lainnya.
 
-4. Generate application key:
+4. Generate kunci aplikasi:
    ```bash
    php artisan key:generate
    ```
 
-5. Run database migrations:
+5. Jalankan migrasi database:
    ```bash
    php artisan migrate
    ```
 
-6. (Optional) Seed the database:
+6. (Opsional) Seed database:
    ```bash
    php artisan db:seed
    ```
 
-7. Start the Laravel development server:
+7. Mulai server pengembangan Laravel:
    ```bash
    php artisan serve
    ```
 
-### Frontend Setup
+### Setup Frontend
 
-1. Navigate to the frontend directory:
+1. Navigasi ke direktori frontend:
    ```bash
    cd frontend
    ```
 
-2. Install Node.js dependencies:
+2. Instal dependensi Node.js:
    ```bash
    npm install
-   # or
+   # atau
    yarn install
-   # or
+   # atau
    pnpm install
    ```
 
-3. Copy the environment file and configure it:
+3. Salin file environment dan konfigurasikan:
    ```bash
    cp .env.local.example .env.local
    ```
-   Update the `.env.local` file with your API base URL (usually `http://localhost:8000/api`).
+   Perbarui file `.env.local` dengan URL base API Anda (biasanya `http://localhost:8000/api`).
 
-4. Start the Next.js development server:
+4. Mulai server pengembangan Next.js:
    ```bash
    npm run dev
-   # or
+   # atau
    yarn dev
-   # or
+   # atau
    pnpm dev
    ```
 
-## Usage
+## Penggunaan
 
-1. Ensure both backend and frontend servers are running.
-2. Open your browser and navigate to `http://localhost:3000` for the frontend.
-3. Register a new account or login with existing credentials.
-4. Create and manage blog posts from the dashboard.
-5. View posts on the blogs page and add comments.
+1. Pastikan kedua server backend dan frontend sedang berjalan.
+2. Buka browser Anda dan navigasi ke `http://localhost:3000` untuk frontend.
+3. Daftar akun baru atau login dengan kredensial yang ada.
+4. Buat dan kelola postingan blog dari dashboard.
+5. Lihat postingan di halaman blog dan tambahkan komentar.
 
-## API Documentation
+## Dokumentasi API
 
-The backend provides a RESTful API. Key endpoints include:
+Backend menyediakan API RESTful. Endpoint utama meliputi:
 
-- `POST /api/register` - User registration
-- `POST /api/login` - User login
-- `GET /api/posts` - Get all posts
-- `POST /api/posts` - Create a new post
-- `GET /api/posts/{id}/comments` - Get comments for a post
-- `POST /api/posts/{id}/comments` - Add a comment to a post
+- `POST /api/register` - Registrasi pengguna
+- `POST /api/login` - Login pengguna
+- `GET /api/posts` - Dapatkan semua postingan
+- `POST /api/posts` - Buat postingan baru
+- `GET /api/posts/{id}/comments` - Dapatkan komentar untuk postingan
+- `POST /api/posts/{id}/comments` - Tambahkan komentar ke postingan
 
-For detailed API documentation, refer to the Laravel API routes in `backend/routes/api.php`.
+Untuk dokumentasi API yang detail, lihat rute API Laravel di `backend/routes/api.php`.
 
-## Project Structure
+## Struktur Proyek
 
 ```
 MonoBlog/
-├── backend/          # Laravel application
-│   ├── app/          # Application code
-│   ├── database/     # Migrations and seeders
-│   ├── routes/       # API and web routes
+├── backend/          # Aplikasi Laravel
+│   ├── app/          # Kode aplikasi
+│   ├── database/     # Migrasi dan seeder
+│   ├── routes/       # Rute API dan web
 │   └── ...
-├── frontend/         # Next.js application
-│   ├── app/          # Next.js app directory
-│   ├── components/   # React components
-│   ├── hooks/        # Custom React hooks
-│   ├── services/     # API service functions
+├── frontend/         # Aplikasi Next.js
+│   ├── app/          # Direktori app Next.js
+│   ├── components/   # Komponen React
+│   ├── hooks/        # Hook React kustom
+│   ├── services/     # Fungsi layanan API
 │   └── ...
-└── README.md         # This file
+└── README.md         # File ini
 ```
 
-## Contributing
+## Kontribusi
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+1. Fork repositori
+2. Buat branch fitur (`git checkout -b feature/fitur-hebat`)
+3. Commit perubahan Anda (`git commit -m 'Tambahkan fitur hebat'`)
+4. Push ke branch (`git push origin feature/fitur-hebat`)
+5. Buka Pull Request
 
-## License
+## Lisensi
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Proyek ini dilisensikan di bawah Lisensi MIT - lihat file [LICENSE](LICENSE) untuk detail.
